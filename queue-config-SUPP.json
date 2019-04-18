@@ -1,0 +1,20 @@
+{
+	"port": "<Your Port>",
+	"url": "<Your URL>",
+	"appid": "<Your registered app ID>",
+	"appsecret": "<Your registered app secret>",
+	"env": "<Your environment>",
+	"db-name": "<Your Database Name>",
+	"db-host": "<Your Database hostname>",
+	"db-user": "<Your Database username>",
+	"db-password": "<Your Database password>",
+	"accela-module": "<Your Accela Module name>",
+	"accela-username": "<Your Accela username>",
+	"accela-password": "<Your Accela password>",
+	"accela-agency": "<Your Accela Agency name>",
+	"accela-scope": "<Your Accela app scope>",
+	"accela-record-type": "<Your Accela record type definition>",
+	"accela-api-url": "https://apis.accela.com/v4/search/records?limit=100&fields=customId,description,status,shortNotes,contacts&expand=contacts",
+	"accela-wf-tasks":["<Your Accela available wf tasks>"],
+	"image-path": "<Your folder location of images to use>"
+}

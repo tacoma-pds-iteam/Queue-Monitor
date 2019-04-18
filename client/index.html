@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<!-- ################ QUEUE MONITOR v1.3.0: Hourglass::Sundial ################
+	This page displays the queue of waiting people in the lobby
+	Created by:
+		- Daniel Jauch, City of Tacoma PDS djauch@cityoftacoma.org
+		- Casey Jamrog, City of Tacoma PDS cjamrog@cityoftacoma.org
+		- Nathan Connors, City of Tacoma PDS nconnors@cityoftacoma.org
+	Last update: 2.22.18
+	-->
+<html lang="en">
+<head>
+	<title>Queue monitor</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge; chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Bitter|Lato:700" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="queue.css">
+	<!-- <link rel="icon" type="image/ico" href="fav/favicon.ico"> -->
+</head>
+
+<body>
+	<header class="site-header">
+		<section class="grid-container">
+			<div class="logo">
+				<img src="/tacoma_logo.png" alt="City of Tacoma Permits">
+			</div>
+			<div class="marquee">
+				<p></p>
+			</div>
+			<div id="clock"></div>
+		</section>
+	</header>
+	<main class="content">
+		<div class="back"></div>
+		<div class="front">
+			<header>
+				<h2>Next Up:</h2>
+			</header>
+			<article id="contentArea">
+				<ul></ul>
+      </article>
+		</div>
+		<div class="footer">
+		    <span>Last Updated: <time class="update-time"></time></span>
+		</div>
+	</main>
+	<aside class="images fader">
+		<ul></ul>
+	</aside>
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+	<script async src="https://use.fontawesome.com/620420abf1.js"></script>
+	<script src="http://malsup.github.io/jquery.cycle.lite.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+	<script src="queue.js"></script>
+</body>
+</html>
