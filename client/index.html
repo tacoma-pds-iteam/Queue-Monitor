@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
-<!-- ################ QUEUE MONITOR v1.3.0: Hourglass::Sundial ################
-	This page displays the queue of waiting people in the lobby
+<!-- QUEUE MONITOR v2 
+	This page displays the queue of waiting people in the lobby.
 	Created by:
-		- Daniel Jauch, City of Tacoma PDS djauch@cityoftacoma.org
+		- Daniel Jauch, City of Tacoma PDS 
 		- Casey Jamrog, City of Tacoma PDS cjamrog@cityoftacoma.org
 		- Nathan Connors, City of Tacoma PDS nconnors@cityoftacoma.org
-	Last update: 2.22.18
+	Last update: 7/22/19
 	-->
 <html lang="en">
 <head>
@@ -14,42 +14,97 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Bitter|Lato:700" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="queue.css">
-	<!-- <link rel="icon" type="image/ico" href="fav/favicon.ico"> -->
 </head>
 
 <body>
 	<header class="site-header">
-		<section class="grid-container">
-			<div class="logo">
-				<img src="/tacoma_logo.png" alt="City of Tacoma Permits">
-			</div>
-			<div class="marquee">
-				<p></p>
-			</div>
-			<div id="clock"></div>
-		</section>
+		<span>Welcome to Planning & Development Services</span>
 	</header>
-	<main class="content">
-		<div class="back"></div>
-		<div class="front">
-			<header>
-				<h2>Next Up:</h2>
-			</header>
-			<article id="contentArea">
+	<header class="site-header2">
+		<span>Walk-In Hours: Monday-Friday 9:00AM-3:00PM</span>
+	</header>
+		<div id="clockContainer"><h1>Clock:</h1><div id="clock"></div></div>
+		<div id="currentContainer"><h1>Currently Serving:</h1>
+		<div id="current">
+			<article>
+				<div class="bc">
+				<h4><i class="fas fa-building building-icon" aria-hidden="true"></i> Commercial Building</h4>
+				<ul>
+					<!-- EXAMPLE FORMAT <li class="person">						
+						<span class="name"><i class="fa fa-user cb"></i> Mike</span>
+					</li>
+					<li class="person">
+						<span class="name"><i class="fa fa-user cb"></i> Sarah</span>
+					</li> -->
+				</ul>
+			</div>
+				<div class="ps">
+				<h4><i class="fas fa-id-card permit-specialist-icon" aria-hidden="true"></i> Permit Specialist</h4>
+				<ul>
+				</ul>
+			</div>
+				<div class="lu">
+				<h4><i class="fas fa-map land-use-icon" aria-hidden="true"></i> Land Use</h4>
+				<ul>
+				</ul>
+			</div>
+				<div class="br">
+					<h4><i class="fas fa-warehouse building-icon" aria-hidden="true"></i> Residential Building</h4>
+				<ul>
+				</ul>
+				</div>
+				<div class="as">
+					<h4><i class="fas fa-id-card-alt"></i> Application Services</h4>
+				<ul>
+				</ul>
+				</div>
+				<div class="tr">
+					<h4><i class="fas fa-car traffic-icon" aria-hidden="true"></i> Traffic</h4>
+				<ul>
+				</ul>
+				</div>
+				<div class="sd"><h4><i class="fas fa-truck site-icon" aria-hidden="true"></i> Site Development</h4>
+				<ul>
+				</ul></div>
+				<div class="rp"><h4><i class="fas fa-home real-property-icon" aria-hidden="true"></i> Real Property</h4>
+				<ul>
+				</ul></div>
+				<div class="fp"><h4><i class="fas fa-fire fire-icon" aria-hidden="true"></i> Fire Protection</h4>
+				<ul>
+				</ul></div>
+				<div class="hr"><h4><i class="fas fa-history historic-icon" aria-hidden="true"></i> Historic</h4>
+				<ul>
+				</ul></div>
+			</article>
+		</div>
+	</div>
+		<div id="nextupContainer"><div id="nextup">
+			<h1>Next Up:</h1>
+			<ul>
+				<!-- EXAMPLE FORMAT <li class="nextperson">
+					<span class="nextdept">	
+							<i class="fas fa-map lu"></i>
+							<i class="fas fa-id-card ps"></i>
+					</span>					
+					<span class="name">Steve</span>
+				</li> -->
+				
+			</ul>
+		</div></div>
+		
+		<div id="newsContainer"><div id="news"><h1>News:</h1>
+			<aside class="images fader">
 				<ul></ul>
-      </article>
-		</div>
+			</aside>
+		</div></div>		
+		<div id="hours"></div>
 		<div class="footer">
-		    <span>Last Updated: <time class="update-time"></time></span>
+			<span>Last Updated: <time class="update-time"></time></span>		    
 		</div>
-	</main>
-	<aside class="images fader">
-		<ul></ul>
-	</aside>
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-	<script async src="https://use.fontawesome.com/620420abf1.js"></script>
 	<script src="http://malsup.github.io/jquery.cycle.lite.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+	<script src="https://kit.fontawesome.com/d9c819fc8e.js"></script>
 	<script src="queue.js"></script>
 </body>
 </html>

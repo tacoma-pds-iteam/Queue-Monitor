@@ -5,6 +5,25 @@ if(process.argv[2] == null) {
   return;
 }
 
+const icons = {
+  'Reception': '<i class="fas fa-user reception-icon" aria-hidden="true" title="Reception"></i>',
+  'Real Property Review': '<i class="fas fa-home rp" aria-hidden="true" title="Real Property"></i>',
+  'Building Residential Review': '<i class="fas fa-warehouse br" aria-hidden="true" title="Residential Building"></i>',
+  'Building Commercial Review': '<i class="fas fa-building bc" aria-hidden="true" title="Commercial Building"></i>',
+  'Site Development Review': '<i class="fas fa-truck sd" aria-hidden="true" title="Site Development"></i>',
+  'Land Use Review': '<i class="fas fa-map lu" aria-hidden="true" title="Land Use"></i>',
+  'Fire Protection Review': '<i class="fas fa-fire fp" aria-hidden="true" title="Fire"></i>',
+  'Traffic Review': '<i class="fas fa-car tr" aria-hidden="true" title="Traffic"></i>',
+  'Historic Review': '<i class="fas fa-history hr" aria-hidden="true" title="Historic"></i>',
+  'Permit Specialist': '<i class="fas fa-id-card ps" aria-hidden="true" title="Permit Specialist"></i>',
+  'Application Services Review': '<i class="fas fa-id-card-alt as" title="Application Services"></i>',
+  'Inspections': '<i class="fas fa-eye inspections-icon" aria-hidden="true" title="Inspection"></i>',
+  'Unknown': '<i class="fas fa-question-circle unknown-icon" aria-hidden="true" title="Unknown"></i>',
+  'wait': '<i class="far fa-clock waiting-icon" aria-hidden="true" title="Waiting For"></i>',
+  'with': '<i class="far fa-handshake with-icon" aria-hidden="true" title="Currently With"></i>',
+  'Time After WF Closed': '<i class="far fa-question-circle unknown-icon" aria-hidden="true" title="Unknown"></i>'
+};
+
 /* Function searches for value from configs global based on given key, returns default if not found */
 getParameter = (key, def) =>{
   if(typeof configs[key] != "undefined") return configs[key];
@@ -13,7 +32,7 @@ getParameter = (key, def) =>{
 
 /* Function gets all images from DB and sends to client */
 sendImages = () => {
-  con3.query('SELECT * FROM images ORDER BY image_order', (err,rows) => {
+  con3.query('SELECT * FROM images WHERE status = "A" ORDER BY image_order', (err,rows) => {
     if(err) return err;
     imageList = rows;
     fs.readdir(getParameter('image-path'), (err, files) => {
@@ -27,14 +46,6 @@ sendImages = () => {
         }
     });
   });
-}
-
-/* Function gets text from database and sets text list to be sent to clients */
-sendText = () => {
-    con3.query('SELECT * FROM text WHERE status = "A" ORDER BY text_order', (err,rows) => {
-      if(err) return err;
-      textList = rows;
-    });
 }
 
 /* Function grabs data from accela and sends to client */
@@ -57,9 +68,9 @@ refresh = (token) => {
     }
   }, (err,resp,result) =>{
     if(resp.statusCode == 200){
-      console.log(result);
+      //console.log(result);
         currentData = result.result;
-        console.log(currentData)
+        //console.log(currentData)
         generateHTML(currentData);
     } else if(resp.statusCode == 401){ // invalid token
       token_refresh();
@@ -69,7 +80,7 @@ refresh = (token) => {
 
   });
 }
-
+/* Function creates HTML and emits to clients */
 generateHTML = data => {
   let customers = [],
       waiters = [],
@@ -78,53 +89,64 @@ generateHTML = data => {
       availableDepartments = getParameter('accela-wf-tasks'),
       customersByDepartment = Array(availableDepartments.length),
       withList = [],
-      result = "";
+      withListHtml = '',
+      waitList = [],
+      waitListHtml = '',
+      result = "",
+      nextTemp = `<li class="nextperson">
+      <span class="name"></span>
+      <span class="nextdept"></span>
+      </li>`,
+      currentTemp = `<li class="person">           
+            <span class="name"><i class="fa fa-user"></i></span>
+          </li>`,
+      currentObj = {};
   for(let i in data){
     let sn = data[i].shortNotes;
+    let name = data[i].contacts[0].firstName;
     if(sn != 'departed' && sn != 'reception'){
       sn = sn.split('|');
       if(sn.length > 1){
         let cWait = sn[1] != '' ? sn[1].split(',') : [];
         let cWith = sn[2] != '' ? sn[2].split(',') : [];
-        if(cWait || cWith)
-          customers.push({"firstName":data[i].contacts[0].firstName, "waiting":cWait, "with":cWith});
+        let tempIcons = '';
+        if(cWait.length > 0){
+          for(let i=0;i<cWait.length;i++){
+            if(cWait[i] != "")
+              tempIcons += icons[cWait[i]] +'\n';
+            //console.log(cWait[i]);
+          }
+          waitListHtml += `<li class="nextperson"><span class="name"> ${name}</span><span class="nextdept">${tempIcons}</span></li>`
+        }
+        // TODO: Finish generating the current with html per dept
+        if(cWith.length > 0){     
+          for(let i=0;i<cWith.length;i++){
+            let initials = getWfInitials(cWith[i].toString()).toLowerCase();
+            if(typeof currentObj[initials] == 'undefined')  //create new dept entry
+              currentObj[initials] = `<li class="person"><span class="name"><i class="fa fa-user"></i> ${name}</span></li>`;
+            else //add to existing dept
+              currentObj[initials] += `<li class="person"><span class="name"><i class="fa fa-user"></i> ${name}</span></li>`;
+          }     
+          
+          
+        }
       }
     }
   }
 
-  for(let i in customers){
-    let cust = customers[i];
-    let custHtml = `<li>${cust.firstName}</li>`;
-    for(let i in cust.waiting){ // check tasks waiting for
-      let initials = getWfInitials(cust.waiting[i].toString());
-      let header = cust.waiting[i].toString().split(" Review")[0];
-
-      let deptIndex = availableDepartments.indexOf(cust.waiting[i].toString());
-      if(customersByDepartment[deptIndex] == null) {
-        customersByDepartment[deptIndex] = [`<div id="${initials}"><h3>${header}</h3><ul>`];
-      }
-      customersByDepartment[deptIndex].push(custHtml);
-    }
-
-    if(cust.with.length > 0) withList.push(custHtml);
-  }
-
-  for(let i in customersByDepartment){
-    customersByDepartment[i].push(`</ul></div>`);
-    result += customersByDepartment[i].join("");
-  }
-  if(withList.length) result += `<div id="WS"><h3>With Specialists</h3><ul>${withList.join("")}</ul></div>`;
-
-  io3.sockets.emit('send-people',result);
+  io3.sockets.emit('update-next', { html: waitListHtml});
+  io3.sockets.emit('update-current', currentObj);
 }
+
 getWfInitials = (task) => {
   let t = "";
   task = task.split(" ");
   task.forEach((v,k)=>{
     t += v[0];
   });
-  return t;
+  return t.slice(0,2);
 }
+
 /* Function gets a new token from Accela */
 token_refresh = () => {
   request({
@@ -223,15 +245,14 @@ app3.get('/', (res) => {
 
 /* Start refresh and token actions */
 sendImages(); // get images and rolling text
-sendText();
 let _t = new Date().getHours();
-if(_t > 7 && _t < 19) { // between 7am and 5pm
+if(_t > 7 && _t < 17) { // between 7am and 5pm
   token_refresh(); // get new token
 }
 
 var refreshInterval = setInterval(function(){
   let _t = new Date().getHours();
-  if(_t > 7 && _t < 19) {
+  if(_t > 7 && _t < 17) {
     refresh(_TOKEN);
   }
 }, 60000);
@@ -241,7 +262,6 @@ io3.on('connection', function(socket) {
     currentUsers3++;
     console.log(PORT3 + `:${currentUsers3} user(s) connected to port ${PORT3}! (ip: ${socket.request.connection.remoteAddress})`);
     socket.emit('send-images', imageList); //send client message that file was sent so it can process
-    socket.emit('send-text', textList); //send client rolling text
 
     /* Client disconnect event */
     socket.on('disconnect', function(d) {

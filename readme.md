@@ -1,6 +1,6 @@
 # Queue Monitor
 
-The Queue Monitor is a simple webpage built in coordination with our customer Tracking application (Tracker) to display customers waiting for departments in our office lobby. The Queue Monitor features custom images and rolling text to display information to show to the customer while waiting to be served.
+The Queue Monitor is a simple webpage built in coordination with our customer Tracking application (Tracker) to display customers waiting for departments in our office lobby. The Queue Monitor features custom images to display information to show to the customer while waiting to be served.
 
 ![](./resources/queueMonitorExample.png)
 
